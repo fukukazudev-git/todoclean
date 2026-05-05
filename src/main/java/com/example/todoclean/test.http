@@ -1,0 +1,23 @@
+### A: GET
+GET http://localhost:8080/todo/1
+
+### B: GET
+GET http://localhost:8080/todo/1
+
+### B: PUT（先に実行）
+PUT http://localhost:8080/todo/1
+Content-Type: application/json
+
+{
+  "title": "更新B",
+  "done": true
+}
+
+### A: PUT（後で実行 → 409）
+PUT http://localhost:8080/todo/1
+Content-Type: application/json
+
+{
+  "title": "更新A（古い）",
+  "done": false
+}

@@ -1,0 +1,64 @@
+### ToDo追加
+POST http://localhost:8080/todo
+Content-Type: application/json
+
+{
+  "title": "test",
+  "done": false
+}
+
+### ToDo削除
+DELETE http://localhost:8080/todo/2
+
+### ToDo一覧
+GET http://localhost:8080/todo/1
+
+### ToDo更新 A
+PUT http://localhost:8080/todo/1
+Content-Type: application/json
+
+{
+  "title": "A",
+  "done": false
+}
+
+
+### ToDo更新 B
+PUT http://localhost:8080/todo/1
+Content-Type: application/json
+
+{
+  "title":"B",
+  "done":false
+}
+
+### ToDo更新 C
+PUT http://localhost:8080/todo/1
+Content-Type: application/json
+
+{
+  "title":"C",
+  "done":false
+}
+
+### 動作確認 POST
+POST http://localhost:8080/todo
+Content-Type: application/json
+
+{
+  "title":"",
+  "done":null
+}
+
+### 動作確認 PUT
+PUT http://localhost:8080/todo/1
+Content-Type: application/json
+
+{
+  "title":"",
+  "done":null
+}
+
+### 動作確認 DELETE
+DELETE http://localhost:8080/todo/999
+
