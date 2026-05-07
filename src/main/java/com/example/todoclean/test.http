@@ -9,15 +9,30 @@ PUT http://localhost:8080/todo/1
 Content-Type: application/json
 
 {
+  "id": 1,
   "title": "更新B",
-  "done": true
+  "done": false,
+  "version": 8
 }
+
 
 ### A: PUT（後で実行 → 409）
 PUT http://localhost:8080/todo/1
 Content-Type: application/json
 
 {
-  "title": "更新A（古い）",
+  "id": 1,
+  "title": "更新A(ロック想定)",
+  "done": false,
+  "version": 8
+}
+
+
+### POST 
+POST http://localhost:8080/todo
+Content-Type: application/json
+
+{
+  "title": "新規ToDo",
   "done": false
 }
