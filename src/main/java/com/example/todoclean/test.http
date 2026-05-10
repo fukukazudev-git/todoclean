@@ -10,7 +10,8 @@ Content-Type: application/json
 
 {
   "title": "更新B",
-  "done": true
+  "done": true,
+  "version": 91
 }
 
 ### A: PUT（後で実行 → 409）
@@ -19,5 +20,6 @@ Content-Type: application/json
 
 {
   "title": "更新A（古い）",
-  "done": false
+  "done": false,
+  "version": 91
 }

@@ -12,6 +12,9 @@ public class UpdateTodoRequest {
     @NotNull
     private Boolean done;
 
+    @NotNull
+    private Long version;
+
     public UpdateTodoRequest(){}
 
     public String getTitle(){return title;}
@@ -19,5 +22,7 @@ public class UpdateTodoRequest {
 
     public Boolean getDone(){return done;}
     public void setDone(Boolean done){this.done = done;}
-    
+
+    public Long getVersion(){return version;}
+    public void setVersion(Long version){this.version = version;}
 }
