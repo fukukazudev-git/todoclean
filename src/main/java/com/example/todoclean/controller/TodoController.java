@@ -41,6 +41,13 @@ public class TodoController {
     }
 
     //単独取得
+    @GetMapping("/todo/{id}/edit")
+    public String editForm(@PathVariable Long id, Model model) {
+        TodoDetailResponse todo = todoService.getById(id);
+        model.addAttribute("todo", todo);
+        return "todo/edit"; //templates/todo/edit.html を表示
+    }
+
     @GetMapping("/todo/{id}")
     public TodoDetailResponse getById(@PathVariable Long id){
         return todoService.getById(id);
