@@ -4,7 +4,7 @@ import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 
 // PUT用 全項目必須パターン
-public class UpdateTodoRequest {
+public class TodoUpdateRequest {
 
     @NotBlank
     private String title;
@@ -12,12 +12,17 @@ public class UpdateTodoRequest {
     @NotNull
     private Boolean done;
 
-    public UpdateTodoRequest(){}
+    @NotNull
+    private Long version;
+
+    public TodoUpdateRequest(){}
 
     public String getTitle(){return title;}
     public void setTitle(String title){this.title = title;}
 
     public Boolean getDone(){return done;}
     public void setDone(Boolean done){this.done = done;}
-    
+
+    public Long getVersion(){return version;}
+    public void setVersion(Long version){this.version = version;}
 }

@@ -10,13 +10,12 @@ import com.example.todoclean.dto.CreateTodoRequest;
 import com.example.todoclean.dto.TodoCreateResponse;
 import com.example.todoclean.dto.TodoDetailResponse;
 import com.example.todoclean.dto.TodoDto;
-import com.example.todoclean.dto.UpdateTodoRequest;
+import com.example.todoclean.dto.TodoUpdateRequest;
 import com.example.todoclean.entity.TodoEntity;
 import com.example.todoclean.exception.TodoNotFoundException;
 import com.example.todoclean.repository.TodoRepository;
 
-import jakarta.persistence.EntityManager;
-import jakarta.persistence.PersistenceContext;
+import jakarta.persistence.OptimisticLockException;
 
 @Service
 @Transactional  //更新処理が途中で失敗した場合でもロールバック
@@ -52,21 +51,21 @@ public class TodoService {
             entity.getId(),
             entity.getTitle(),
             entity.getDone(),
-            entity.getOptLockVersion()
+            entity.getVersion()
         );
     }
 
-    @PersistenceContext
-    private EntityManager em;
     //更新処理
     @Transactional
-    public TodoDetailResponse update(Long id, UpdateTodoRequest request){
-        System.out.println("isActive: " + em.isJoinedToTransaction());
-
+    public TodoDetailResponse update(Long id, TodoUpdateRequest request){
 
         //orElseThrow()は値が無い場合に例外を投げる
         TodoEntity entity = repository.findById(id)
                .orElseThrow(() -> new TodoNotFoundException(id));
+        
+        if (!entity.getVersion().equals(request.getVersion())){
+            throw new OptimisticLockException();
+        }
 
         entity.setTitle(request.getTitle());
         entity.setDone(request.getDone());
@@ -75,7 +74,7 @@ public class TodoService {
             entity.getId(), 
             entity.getTitle(), 
             entity.getDone(), 
-            entity.getOptLockVersion()
+            entity.getVersion()
         );
     }
 

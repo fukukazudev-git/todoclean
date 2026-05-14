@@ -11,8 +11,13 @@ Content-Type: application/json
 {
   "id": 1,
   "title": "更新B",
+<<<<<<< HEAD
   "done": false,
   "version": 8
+=======
+  "done": true,
+  "version": 91
+>>>>>>> dbb0e174dee9a1d64c63c4ab847bbc94e1725596
 }
 
 
@@ -21,10 +26,16 @@ PUT http://localhost:8080/todo/1
 Content-Type: application/json
 
 {
+<<<<<<< HEAD
   "id": 1,
   "title": "更新A(ロック想定)",
   "done": false,
   "version": 8
+=======
+  "title": "更新A（古い）",
+  "done": false,
+  "version": 91
+>>>>>>> dbb0e174dee9a1d64c63c4ab847bbc94e1725596
 }
 
 

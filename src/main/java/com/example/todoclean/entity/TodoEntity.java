@@ -18,7 +18,7 @@ public class TodoEntity {
 
     @Column(name = "opt_lock_version")
     @Version
-    private Long optLockVersion=0L; //楽観的ロックのためのバージョンフィールド
+    private Long version=0L; //楽観的ロックのためのバージョンフィールド
 
     protected TodoEntity(){}
     
@@ -39,6 +39,7 @@ public class TodoEntity {
     public Boolean getDone(){return done;}
     public void setDone(Boolean done){this.done = done;}
 
-    public Long getOptLockVersion(){return optLockVersion;}
+    public Long getVersion(){return version;}
+    public void setVersion(Long version){this.version = version;}
     
 }

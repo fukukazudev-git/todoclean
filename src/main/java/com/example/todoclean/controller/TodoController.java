@@ -11,14 +11,16 @@ import com.example.todoclean.dto.CreateTodoRequest;
 import com.example.todoclean.dto.TodoCreateResponse;
 import com.example.todoclean.dto.TodoDetailResponse;
 import com.example.todoclean.dto.TodoDto;
-import com.example.todoclean.dto.UpdateTodoRequest;
+import com.example.todoclean.dto.TodoUpdateRequest;
 import com.example.todoclean.service.TodoService;
 
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.ModelAttribute;
 
+import org.springframework.ui.Model;
 
 @RestController
 public class TodoController {
@@ -41,6 +43,13 @@ public class TodoController {
     }
 
     //単独取得
+    @GetMapping("/todo/{id}/edit")
+    public String editForm(@PathVariable Long id, Model model) {
+        TodoDetailResponse todo = todoService.getById(id);
+        model.addAttribute("todo", todo);
+        return "todo/edit"; //templates/todo/edit.html を表示
+    }
+
     @GetMapping("/todo/{id}")
     public TodoDetailResponse getById(@PathVariable Long id){
         return todoService.getById(id);
@@ -54,11 +63,12 @@ public class TodoController {
 
     //更新処理
     @PutMapping("/todo/{id}")
-    public TodoDetailResponse update(
-        @PathVariable Long id ,
-        @Valid @RequestBody UpdateTodoRequest request
+    public String update(
+        @PathVariable Long id,
+        @Valid @ModelAttribute TodoUpdateRequest form
     ){
-        return todoService.update(id, request);
+        todoService.update(id, form);
+        return "redirect:/todo";
     }
 }
 /*memo
