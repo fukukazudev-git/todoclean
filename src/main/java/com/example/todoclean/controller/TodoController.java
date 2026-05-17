@@ -5,7 +5,6 @@ import jakarta.validation.Valid;
 
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RestController;
 
 import com.example.todoclean.dto.CreateTodoRequest;
 import com.example.todoclean.dto.TodoCreateResponse;
@@ -19,10 +18,10 @@ import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
-
+import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 
-@RestController
+@Controller
 public class TodoController {
 
     private final TodoService todoService;
@@ -44,9 +43,10 @@ public class TodoController {
 
     //単独取得
     @GetMapping("/todo/{id}/edit")
+    //ModelはSpringが注入する。コントローラーからHTMLテンプレートに値を渡すためのオブジェクト
     public String editForm(@PathVariable Long id, Model model) {
         TodoDetailResponse todo = todoService.getById(id);
-        model.addAttribute("todo", todo);
+        model.addAttribute("todo", todo); //HTMLテンプレートで使用する変数名"todo"と、渡す値todoを指定
         return "todo/edit"; //templates/todo/edit.html を表示
     }
 
@@ -63,11 +63,14 @@ public class TodoController {
 
     //更新処理
     @PutMapping("/todo/{id}")
+    //@ModelAttributeはリクエストパラメータをJavaオブジェクトにバインドするためのアノテーション
     public String update(
         @PathVariable Long id,
-        @Valid @ModelAttribute TodoUpdateRequest form
+        @Valid @ModelAttribute TodoUpdateRequest form //リクエストパラメータ(form-data)をTodoUpdateRequestオブジェクトにバインドする
     ){
         todoService.update(id, form);
+        //更新後はリダイレクトして一覧画面に遷移する
+        //理由は更新自体されたかわかりにくいのと同時更新を防ぐため
         return "redirect:/todo";
     }
 }

@@ -57,25 +57,20 @@ public class TodoService {
 
     //更新処理
     @Transactional
-    public TodoDetailResponse update(Long id, TodoUpdateRequest request){
+    public void update(Long id, TodoUpdateRequest form){
 
         //orElseThrow()は値が無い場合に例外を投げる
         TodoEntity entity = repository.findById(id)
                .orElseThrow(() -> new TodoNotFoundException(id));
         
-        if (!entity.getVersion().equals(request.getVersion())){
+        //同時更新防止
+        if (!entity.getVersion().equals(form.getVersion())){
             throw new OptimisticLockException();
         }
 
-        entity.setTitle(request.getTitle());
-        entity.setDone(request.getDone());
+        entity.setTitle(form.getTitle());
+        entity.setDone(form.getDone());
 
-        return new TodoDetailResponse(
-            entity.getId(), 
-            entity.getTitle(), 
-            entity.getDone(), 
-            entity.getVersion()
-        );
     }
 
     //削除処理
