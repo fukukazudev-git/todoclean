@@ -3,9 +3,16 @@ package com.example.todoclean.controller;
 import java.util.List;
 import jakarta.validation.Valid;
 
+import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.ModelAttribute;
+
 
 import com.example.todoclean.dto.CreateTodoRequest;
 import com.example.todoclean.dto.TodoCreateResponse;
@@ -14,15 +21,10 @@ import com.example.todoclean.dto.TodoDto;
 import com.example.todoclean.dto.TodoUpdateRequest;
 import com.example.todoclean.service.TodoService;
 
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.DeleteMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.ModelAttribute;
-
 import org.springframework.ui.Model;
 
-@RestController
+@Controller
+@RequestMapping("/todo")
 public class TodoController {
 
     private final TodoService todoService;
@@ -32,12 +34,12 @@ public class TodoController {
     }
 
     //新規作成
-    @PostMapping("/todo")
+    @PostMapping
     public TodoCreateResponse create(@Valid @RequestBody CreateTodoRequest request){
         return todoService.create(request);
     }
     //全件取得
-    @GetMapping("/todo")
+    @GetMapping
     public List<TodoDto> getTodos() {
         return todoService.getAll();
     }
