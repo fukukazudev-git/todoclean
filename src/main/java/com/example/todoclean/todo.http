@@ -10,8 +10,8 @@ Content-Type: application/json
 ### ToDo削除
 DELETE http://localhost:8080/todo/2
 
-### ToDo一覧
-GET http://localhost:8080/todo/1
+### ToDo編集画面表示
+GET http://localhost:8080/todo/1/edit
 
 ### ToDo更新 A
 PUT http://localhost:8080/todo/1
