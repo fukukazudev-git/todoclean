@@ -1,16 +1,14 @@
 package com.example.todoclean.dto;
 
 import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Size;
 // POST用 
-public class CreateTodoRequest{
+public class TodoCreateRequest{
 
-    @NotBlank
+    @NotBlank(message = "タイトルは必須です")
+    @Size(max = 50, message = "タイトルは50文字以内で入力してください")
     private String title;
 
-    //POST 時は done を送らせない設計も多い
-    //必要なら @NotNullを付けてもよい
-    @NotNull
     private Boolean done;
 
     public String getTitle(){return title;}

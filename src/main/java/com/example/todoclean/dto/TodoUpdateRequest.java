@@ -1,18 +1,15 @@
 package com.example.todoclean.dto;
 
 import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Size;
 
 // PUT用 全項目必須パターン
 public class TodoUpdateRequest {
 
-    @NotBlank
+    @NotBlank(message = "タイトルは必須です")
+    @Size(max = 50, message = "タイトルは50文字以内で入力してください")
     private String title;
-
-    @NotNull
     private Boolean done;
-
-    @NotNull
     private Long version;
 
     public TodoUpdateRequest(){}

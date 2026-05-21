@@ -6,11 +6,7 @@ import java.util.stream.Collectors;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import com.example.todoclean.dto.CreateTodoRequest;
-import com.example.todoclean.dto.TodoCreateResponse;
-import com.example.todoclean.dto.TodoDetailResponse;
-import com.example.todoclean.dto.TodoDto;
-import com.example.todoclean.dto.TodoUpdateRequest;
+import com.example.todoclean.dto.*;
 import com.example.todoclean.entity.TodoEntity;
 import com.example.todoclean.exception.TodoNotFoundException;
 import com.example.todoclean.repository.TodoRepository;
@@ -27,11 +23,10 @@ public class TodoService {
         this.repository = repository;
     }
 
-    //登録処理
-    public TodoCreateResponse create(CreateTodoRequest request){
+    //登録処理(保存)
+    public void create(TodoCreateRequest request){
     TodoEntity entity = new TodoEntity(request.getTitle(), request.getDone());
-    TodoEntity saved = repository.save(entity);
-    return new TodoCreateResponse(saved.getId(), saved.getTitle(), saved.getDone());
+    repository.save(entity);
     }
 
     //全件取得
@@ -74,6 +69,7 @@ public class TodoService {
     }
 
     //削除処理
+    //削除処理はDBを更新するのでトランザクションを付ける
     @Transactional
     public void delete(Long id){
         TodoEntity entity = repository.findById(id)

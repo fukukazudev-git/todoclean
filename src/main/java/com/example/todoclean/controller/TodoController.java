@@ -1,55 +1,56 @@
 package com.example.todoclean.controller;
 
-import java.util.List;
+import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
+import org.springframework.web.bind.annotation.*;
+
 import jakarta.validation.Valid;
 
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.DeleteMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.ModelAttribute;
-
-
-import com.example.todoclean.dto.CreateTodoRequest;
-import com.example.todoclean.dto.TodoCreateResponse;
-import com.example.todoclean.dto.TodoDetailResponse;
-import com.example.todoclean.dto.TodoDto;
-import com.example.todoclean.dto.TodoUpdateRequest;
+import com.example.todoclean.dto.*;
 import com.example.todoclean.service.TodoService;
 
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.DeleteMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.ModelAttribute;
-
-import org.springframework.ui.Model;
-
-@RestController
+@Controller
+@RequestMapping("/todo")
 public class TodoController {
 
     private final TodoService todoService;
-
+    
+    //コンストラクタインジェクション
     public TodoController(TodoService todoService){
         this.todoService = todoService;
     }
 
-    //新規作成
-    @PostMapping
-    public TodoCreateResponse create(@Valid @RequestBody CreateTodoRequest request){
-        return todoService.create(request);
-    }
-    //全件取得
-    @GetMapping
-    public List<TodoDto> getTodos() {
-        return todoService.getAll();
+    //新規作成フォーム表示
+    @GetMapping("/create")
+    public String createForm(Model model){
+        model.addAttribute("form", new TodoCreateRequest());
+        return "todo/create";
     }
 
-    //単独取得
-    @GetMapping("/todo/{id}/edit")
+    //新規作成処理呼び出し+画面遷移
+    @PostMapping("/create")
+    public String create(
+        @Valid @ModelAttribute("form") TodoCreateRequest form,
+        BindingResult bindingResult,
+        Model model
+    ){
+        if (bindingResult.hasErrors()){
+            return "todo/create"; //入力画面に戻す
+        }
+        todoService.create(form);
+        return "redirect:/todo";
+    }
+
+    //一覧ページ表示
+    @GetMapping
+    public String list(Model model){
+        model.addAttribute("todos", todoService.getAll());
+        return "todo/list";
+    }
+
+    //編集ページとして単独表示
+    @GetMapping("/{id}/edit")
     //ModelはSpringが注入する。コントローラーからHTMLテンプレートに値を渡すためのオブジェクト
     public String editForm(@PathVariable Long id, Model model) {
         TodoDetailResponse todo = todoService.getById(id);
@@ -57,24 +58,30 @@ public class TodoController {
         return "todo/edit"; //templates/todo/edit.html を表示
     }
 
-    @GetMapping("/todo/{id}")
+    @GetMapping("/{id}")
     public TodoDetailResponse getById(@PathVariable Long id){
         return todoService.getById(id);
     }
 
-    //削除
-    @DeleteMapping("/todo/{id}")  //{id}はURLの一部を変数として受け取る
-    public void delete(@PathVariable Long id){
+    //
+    @DeleteMapping("/{id}") //画面遷移なので viod ではなく String を返す
+    public String delete(@PathVariable Long id){
         todoService.delete(id);
+        return "redirect:/todo";
     }
 
     //更新処理
-    @PutMapping("/todo/{id}")
+    @PutMapping("/{id}")
     //@ModelAttributeはリクエストパラメータをJavaオブジェクトにバインドするためのアノテーション
     public String update(
         @PathVariable Long id,
-        @Valid @ModelAttribute TodoUpdateRequest form //リクエストパラメータ(form-data)をTodoUpdateRequestオブジェクトにバインドする
+        @Valid @ModelAttribute("todo") TodoUpdateRequest form,
+        BindingResult bindingResult,
+        Model model
     ){
+        if (bindingResult.hasErrors()){
+            return "todo/edit"; //編集画面に戻す
+        }
         todoService.update(id, form);
         //更新後はリダイレクトして一覧画面に遷移する
         //理由は更新自体されたかわかりにくいのと同時更新を防ぐため

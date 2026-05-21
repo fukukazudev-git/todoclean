@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html xmlns:th="http.//www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Todo 新規作成</title>
+</head>
+<body>
+
+<h1>Todo 新規作成</h1>
+
+<form th:action="@{/todo/create}" method="post" th:object="${form}">
+
+    <div th:if="${#fields.hasErrors('*')}">
+        <ul>
+            <li th:each="err : ${#fields.errors('*')}"
+                th:text="${err}"></li>
+        </ul>
+    </div>
+    <label>タイトル</label>
+    <input type="text" name="title" th:value="${form.title}">
+    <br>
+
+    <label>完了；</label>
+    <input type="checkbox" name="done" th:checked="${form.done}">
+    <br>
+
+    <button type="submit">作成</button>
+
+</form>
+
+</body>
+</html>

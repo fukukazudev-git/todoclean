@@ -8,10 +8,11 @@
 
 <h1>Todo 編集</h1>
 
-<form th:action="@{'/todo/' + ${todo.id}}" method="post">
+<form th:action="@{'/todo/' + ${todo.id}}" method="post"　th:object="${form}">
     <!-- PUT メソッドに変換-->
     <input type="hidden" name="_method" value="put">
      
+    
     <!-- version を hidden で埋め込む -->
     <input type="hidden" name="version" th:value="${todo.version}">
 
