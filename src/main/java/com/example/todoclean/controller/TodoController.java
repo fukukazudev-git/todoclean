@@ -80,7 +80,7 @@ public class TodoController {
         Model model
     ){
         if (bindingResult.hasErrors()){
-            return "todo/edit"; //編集画面に戻す
+            return "todo/edit"; //エラー時は編集画面に戻す
         }
         todoService.update(id, form);
         //更新後はリダイレクトして一覧画面に遷移する
