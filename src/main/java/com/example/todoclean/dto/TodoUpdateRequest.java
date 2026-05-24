@@ -6,6 +6,8 @@ import jakarta.validation.constraints.Size;
 // PUT用 全項目必須パターン
 public class TodoUpdateRequest {
 
+    private Long id;
+
     @NotBlank(message = "タイトルは必須です")
     @Size(max = 50, message = "タイトルは50文字以内で入力してください")
     private String title;
@@ -13,6 +15,9 @@ public class TodoUpdateRequest {
     private Long version;
 
     public TodoUpdateRequest(){}
+
+    public Long getId(){return id;}
+    public void setId(Long id){this.id = id;}
 
     public String getTitle(){return title;}
     public void setTitle(String title){this.title = title;}
