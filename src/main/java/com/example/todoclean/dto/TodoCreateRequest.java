@@ -9,11 +9,17 @@ public class TodoCreateRequest{
     @Size(max = 50, message = "タイトルは50文字以内で入力してください")
     private String title;
 
+    @Size(max = 200, message = "詳細は200文字以内で入力してください")
+    private String description;
+
     private Boolean done;
 
     public String getTitle(){return title;}
     public void setTitle(String title){this.title = title;}
     
+    public String getDescription(){return description;}
+    public void setDescription(String description){this.description = description;}
+
     public Boolean getDone(){return done;}
     public void setDone(Boolean done){this.done = done;}
 

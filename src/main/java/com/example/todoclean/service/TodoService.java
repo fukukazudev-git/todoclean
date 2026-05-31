@@ -25,7 +25,7 @@ public class TodoService {
 
     //登録処理(保存)
     public void create(TodoCreateRequest request){
-    TodoEntity entity = new TodoEntity(request.getTitle(), request.getDone());
+    TodoEntity entity = new TodoEntity(request.getTitle(), request.getDescription(), request.getDone());
     repository.save(entity);
     }
 
@@ -45,6 +45,7 @@ public class TodoService {
         return new TodoDetailResponse(
             entity.getId(),
             entity.getTitle(),
+            entity.getDescription(),
             entity.getDone(),
             entity.getVersion()
         );
@@ -64,6 +65,7 @@ public class TodoService {
         }
 
         entity.setTitle(form.getTitle());
+        entity.setDescription(form.getDescription());
         entity.setDone(form.getDone());
 
     }
@@ -79,6 +81,6 @@ public class TodoService {
     
     //DTO変換をメソッド化、コードの重複を減らし、保守性も上げる
     private TodoDto toDto(TodoEntity e ){
-        return new TodoDto(e.getId(), e.getTitle(), e.getDone());
+        return new TodoDto(e.getId(), e.getTitle(), e.getDescription(), e.getDone());
     }
 }

@@ -5,14 +5,16 @@ public class TodoDetailResponse{
 
     private Long id;
     private String title;
+    private String description;
     private Boolean done;
     private Long version;
 
     public TodoDetailResponse(){}
     
-    public TodoDetailResponse(Long id , String title, Boolean done, Long version){
+    public TodoDetailResponse(Long id , String title, String description, Boolean done, Long version){
         this.id = id;
         this.title = title;
+        this.description = description;
         this.done = done;
         this.version = version;
     }
@@ -23,6 +25,10 @@ public class TodoDetailResponse{
     public String getTitle(){return title;}
     public void setTitle(String title){this.title = title;}
     
+    public String getDescription(){return description;}
+    public void setDescription(String description){this.description = description;}
+
+
     public Boolean getDone(){return done;}
     public void setDone(Boolean done){this.done = done;}
 

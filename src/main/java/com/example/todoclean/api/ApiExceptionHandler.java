@@ -1,4 +1,4 @@
-package com.example.todoclean.exception;
+package com.example.todoclean.api;
 
 import java.util.List;
 
@@ -8,14 +8,18 @@ import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.MethodArgumentNotValidException;
-import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
+import org.springframework.web.bind.annotation.RestControllerAdvice;
+
+import com.example.todoclean.exception.ErrorResponse;
+import com.example.todoclean.exception.FieldValidationError;
+import com.example.todoclean.exception.TodoNotFoundException;
 
 //アプリ全体の例外を扱うことを宣言
 // @RestControllerAdvice は @ControllerAdvice + @ResponseBody
 // ResponseEntityを返す背系になっている場合は下記の実装でよい→ ResponseEntityは常にJSONを返すから
-@ControllerAdvice
-public class GlobalExceptionHandler {
+@RestControllerAdvice(basePackages = "com.example.todoclean.api") //api層の例外を処理することを宣言
+public class ApiExceptionHandler {
 
     //Service層でTodoNotFoundExceptionが発生した場合の処理を定義
     @ExceptionHandler(TodoNotFoundException.class)

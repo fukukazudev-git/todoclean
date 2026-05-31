@@ -14,6 +14,7 @@ public class TodoEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     private String title;
+    private String description;
     private Boolean done;
 
     @Column(name = "opt_lock_version")
@@ -22,8 +23,9 @@ public class TodoEntity {
 
     protected TodoEntity(){}
     
-    public TodoEntity(String title, Boolean done){
+    public TodoEntity(String title, String description, Boolean done){
         this.title = title;
+        this.description = description;
         this.done = done;
     }
 
@@ -38,6 +40,9 @@ public class TodoEntity {
     // HibernateはJavaBeans規約に非常に敏感でgetter/setterの命名が崩れるとプロパティ解析が壊れる
     public Boolean getDone(){return done;}
     public void setDone(Boolean done){this.done = done;}
+
+    public String getDescription(){return description;}
+    public void setDescription(String description){this.description = description;}
 
     public Long getVersion(){return version;}
     public void setVersion(Long version){this.version = version;}
