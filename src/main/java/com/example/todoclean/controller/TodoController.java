@@ -1,5 +1,7 @@
 package com.example.todoclean.controller;
 
+import java.util.List;
+
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -44,9 +46,18 @@ public class TodoController {
 
     //一覧ページ表示
     @GetMapping
-    public String list(Model model){
-        model.addAttribute("todos", todoService.getAll());
-        return "todo/list";
+    public String list(
+        @RequestParam(defaultValue = "title") String sort,
+        @RequestParam(defaultValue = "asc") String order,
+        Model model){
+            // Controllerは文字列のみを渡す
+            List<TodoDto> todos =  todoService.getAll(sort, order);
+
+            model.addAttribute("todos", todos);
+            model.addAttribute("sort", sort);
+            model.addAttribute("order", order);
+
+            return "todo/list";
     }
 
     //編集ページとして単独表示

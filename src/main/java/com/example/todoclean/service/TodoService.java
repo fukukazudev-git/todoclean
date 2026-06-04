@@ -5,6 +5,7 @@ import java.util.stream.Collectors;
 
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.data.domain.Sort;
 
 import com.example.todoclean.dto.*;
 import com.example.todoclean.entity.TodoEntity;
@@ -29,12 +30,16 @@ public class TodoService {
     repository.save(entity);
     }
 
-    //全件取得
-    public List<TodoDto> getAll(){
+    // 全件取得
+    // Sort を組み立てる
+    public List<TodoDto> getAll(String sortField, String order){ 
+        Sort.Direction direction = "desc".equalsIgnoreCase(order) ? Sort.Direction.DESC : Sort.Direction.ASC;
+
         //repository.findAll()はList<TodoEntity>を返す。これをList<TodoDto>に変換するためにストリームAPIを使用している
-        return repository.findAll().stream() // findAllで全件取得、stream()で1件ずつ処理するモードへ
-                .map(this::toDto)   //map()でEntity→DTOに変換する処理を適用
-                .collect(Collectors.toList());  //ToList()でListに戻す
+        return repository.findAll(Sort.by(direction, // findAllで全件取得、stream()で1件ずつ処理するモードへ
+            sortField)).stream()
+                        .map(this::toDto) //map()でEntity→DTOに変換する処理を適用
+                        .collect(Collectors.toList()); //toList()でListに戻す
     }
 
     //単独取得

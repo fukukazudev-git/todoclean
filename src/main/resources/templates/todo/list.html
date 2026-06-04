@@ -12,7 +12,13 @@
         <thead class="table-dark">
             <tr>
                 <th>ID</th>
-                <th>タイトル</th>
+                <th>
+                    タイトル
+                    <a th:href="@{/todo(sort='title', order=${order == 'asc' ? 'desc' : 'asc'})}">
+                        <span th:if="${order == 'asc'}">▴</span>
+                        <span th:if="${order == 'desc'}">▾</span>
+                    </a>
+                </th>
                 <th>完了</th>
                 <th>詳細</th>
                 <th>操作</th>
