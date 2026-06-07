@@ -1,7 +1,7 @@
 package com.example.todoclean.service;
 
 import java.util.List;
-import java.util.stream.Collectors;
+import java.time.LocalDateTime;
 
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -26,20 +26,28 @@ public class TodoService {
 
     //登録処理(保存)
     public void create(TodoCreateRequest request){
-    TodoEntity entity = new TodoEntity(request.getTitle(), request.getDescription(), request.getDone());
+    TodoEntity entity = new TodoEntity(request.getTitle(), request.getDescription(), request.getDone(), LocalDateTime.now());
     repository.save(entity);
     }
 
     // 全件取得
     // Sort を組み立てる
-    public List<TodoDto> getAll(String sortField, String order){ 
+    public List<TodoDto> getAll(String sortField, String order, String keyword){ 
         Sort.Direction direction = "desc".equalsIgnoreCase(order) ? Sort.Direction.DESC : Sort.Direction.ASC;
 
-        //repository.findAll()はList<TodoEntity>を返す。これをList<TodoDto>に変換するためにストリームAPIを使用している
-        return repository.findAll(Sort.by(direction, // findAllで全件取得、stream()で1件ずつ処理するモードへ
-            sortField)).stream()
-                        .map(this::toDto) //map()でEntity→DTOに変換する処理を適用
-                        .collect(Collectors.toList()); //toList()でListに戻す
+        Sort sort = Sort.by(direction, sortField);
+
+        List<TodoEntity> entities;
+
+        //keywordが空なら全件、存在すれば部分一致検索
+        if(keyword == null || keyword.isBlank()){
+            entities = repository.findAll(sort);
+        } else {
+            entities = repository.findByTitleContaining(keyword, sort);
+        }
+        return entities.stream()
+            .map(this::toDto)
+            .toList();
     }
 
     //単独取得
@@ -86,6 +94,6 @@ public class TodoService {
     
     //DTO変換をメソッド化、コードの重複を減らし、保守性も上げる
     private TodoDto toDto(TodoEntity e ){
-        return new TodoDto(e.getId(), e.getTitle(), e.getDescription(), e.getDone());
+        return new TodoDto(e.getId(), e.getTitle(), e.getDescription(), e.getDone(), e.getCreatedAt());
     }
 }

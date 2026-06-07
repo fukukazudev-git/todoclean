@@ -49,13 +49,15 @@ public class TodoController {
     public String list(
         @RequestParam(defaultValue = "title") String sort,
         @RequestParam(defaultValue = "asc") String order,
+        @RequestParam(required = false) String keyword,
         Model model){
             // Controllerは文字列のみを渡す
-            List<TodoDto> todos =  todoService.getAll(sort, order);
+            List<TodoDto> todos =  todoService.getAll(sort, order, keyword);
 
             model.addAttribute("todos", todos);
             model.addAttribute("sort", sort);
             model.addAttribute("order", order);
+            model.addAttribute("keyword", keyword);
 
             return "todo/list";
     }

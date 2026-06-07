@@ -1,4 +1,5 @@
 package com.example.todoclean.dto;
+import java.time.LocalDateTime;
 //一覧用
 public class TodoDto{
 
@@ -6,14 +7,16 @@ public class TodoDto{
     private String title;
     private String description;
     private Boolean done;
+    private LocalDateTime createdAt;
 
     public TodoDto(){}
 
-    public TodoDto(Long id , String title, String description, Boolean done){
+    public TodoDto(Long id , String title, String description, Boolean done, LocalDateTime createdAt){
         this.id = id;
         this.title = title;
         this.description = description;
         this.done = done;
+        this.createdAt = createdAt;
     }
 
     public Long getId(){return id;}
@@ -27,6 +30,9 @@ public class TodoDto{
 
     public Boolean getDone(){return done;}
     public void setDone(Boolean done){this.done = done;}
+
+    public LocalDateTime getCreatedAt(){return createdAt;}
+    public void setCreatedAt(LocalDateTime createdAt){this.createdAt = createdAt;}
 
 }
 

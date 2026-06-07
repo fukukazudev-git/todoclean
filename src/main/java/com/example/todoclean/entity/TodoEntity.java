@@ -1,6 +1,7 @@
 package com.example.todoclean.entity;
 
 import jakarta.persistence.*;
+import java.time.LocalDateTime;
 
 //DBのテーブルになる
 @Entity
@@ -21,12 +22,17 @@ public class TodoEntity {
     @Version
     private Long version=0L; //楽観的ロックのためのバージョンフィールド
 
+    // updatable=falseで、更新時に作成日時が変更されないようにする
+    @Column(nullable = false, updatable = false)
+    private LocalDateTime createdAt;
+
     protected TodoEntity(){}
     
-    public TodoEntity(String title, String description, Boolean done){
+    public TodoEntity(String title, String description, Boolean done, LocalDateTime createdAt){
         this.title = title;
         this.description = description;
         this.done = done;
+        this.createdAt = createdAt;
     }
 
     public Long getId(){return id;}
@@ -47,4 +53,7 @@ public class TodoEntity {
     public Long getVersion(){return version;}
     public void setVersion(Long version){this.version = version;}
     
+    public LocalDateTime getCreatedAt(){return createdAt;}
+    public void setCreatedAt(LocalDateTime createdAt){this.createdAt = createdAt;}
+
 }
