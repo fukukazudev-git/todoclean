@@ -50,14 +50,16 @@ public class TodoController {
         @RequestParam(defaultValue = "title") String sort,
         @RequestParam(defaultValue = "asc") String order,
         @RequestParam(required = false) String keyword,
+        @RequestParam(defaultValue = "all") String filter,
         Model model){
             // Controllerは文字列のみを渡す
-            List<TodoDto> todos =  todoService.getAll(sort, order, keyword);
+            List<TodoDto> todos =  todoService.getAll(sort, order, keyword, filter);
 
             model.addAttribute("todos", todos);
             model.addAttribute("sort", sort);
             model.addAttribute("order", order);
             model.addAttribute("keyword", keyword);
+            model.addAttribute("filter", filter);
 
             return "todo/list";
     }

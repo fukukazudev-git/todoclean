@@ -32,18 +32,28 @@ public class TodoService {
 
     // 全件取得
     // Sort を組み立てる
-    public List<TodoDto> getAll(String sortField, String order, String keyword){ 
+    public List<TodoDto> getAll(String sortField, String order, String keyword, String filter){ 
         Sort.Direction direction = "desc".equalsIgnoreCase(order) ? Sort.Direction.DESC : Sort.Direction.ASC;
 
         Sort sort = Sort.by(direction, sortField);
 
         List<TodoEntity> entities;
-
-        //keywordが空なら全件、存在すれば部分一致検索
-        if(keyword == null || keyword.isBlank()){
-            entities = repository.findAll(sort);
+        
+        // 1.フィルタリング (done)
+        if ("done".equals(filter)){
+            entities = repository.findByDone(true, sort);
+        } else if ("notdone".equals(filter)){
+            entities = repository.findByDone(false, sort);
         } else {
-            entities = repository.findByTitleContaining(keyword, sort);
+            // 2.フィルタなし → 全件
+            entities = repository.findAll(sort);
+        }
+
+        // 3.検索(keyword) がある場合はさらに絞り込み
+        if(keyword != null && !keyword.isBlank()){
+            entities = entities.stream()
+                .filter(e -> e.getTitle().contains(keyword))
+                .toList();
         }
         return entities.stream()
             .map(this::toDto)

@@ -52,6 +52,33 @@
             </ul>
         </div>
 
+        <!-- フィルタードロップダウン -->
+        <div class="dropdown ms-3">
+            <button class="btn btn-outline-secondary dropdown-toggle" type="button" data-bs-toggle="dropdown">
+                表示
+            </button>
+            <ul class="dropdown-menu">
+                <li>
+                    <a class="dropdown-item"
+                    th:href="@{/todo(sort=${sort}, order=${order}, keyword=${keyword}, filter='all')}">
+                    全て表示
+                    </a>
+                </li>
+                <li>
+                    <a class="dropdown-item"
+                    th:href="@{/todo(sort=${sort}, order=${order}, keyword=${keyword}, filter='notdone')}">
+                    未完了のみ
+                    </a>
+                </li>
+                <li>
+                    <a class="dropdown-item"
+                    th:href="@{/todo(sort=${sort}, order=${order}, keyword=${keyword}, filter='done')}">
+                    完了のみ
+                    </a>
+                </li>
+            </ul>
+        </div>
+
     </div>
 
 
@@ -108,6 +135,6 @@
     </a>
 </div>
 
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+<div th:replace="~{layout :: scripts}"></div>
 </body>
 </html>

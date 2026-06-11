@@ -7,6 +7,8 @@ import com.example.todoclean.entity.TodoEntity;
 
 public interface TodoRepository extends JpaRepository<TodoEntity, Long> {
 List<TodoEntity> findByTitleContaining(String keyword, Sort sort);
+
+List<TodoEntity> findByDone(boolean done, Sort sort);
 }
 /*memo
 save() → INSERT/UPDATE
