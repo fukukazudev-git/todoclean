@@ -1,5 +1,7 @@
 package com.example.todoclean.repository;
 import org.springframework.data.domain.Sort;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.List;
@@ -8,7 +10,8 @@ import com.example.todoclean.entity.TodoEntity;
 public interface TodoRepository extends JpaRepository<TodoEntity, Long> {
 List<TodoEntity> findByTitleContaining(String keyword, Sort sort);
 
-List<TodoEntity> findByDone(boolean done, Sort sort);
+Page<TodoEntity> findByDone(boolean done, Pageable pageable);
+Page<TodoEntity> findAll(Pageable pageable);
 }
 /*memo
 save() → INSERT/UPDATE

@@ -6,6 +6,10 @@ import java.time.LocalDateTime;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.data.domain.Sort;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.PageRequest;
 
 import com.example.todoclean.dto.*;
 import com.example.todoclean.entity.TodoEntity;
@@ -32,32 +36,35 @@ public class TodoService {
 
     // 全件取得
     // Sort を組み立てる
-    public List<TodoDto> getAll(String sortField, String order, String keyword, String filter){ 
+    public Page<TodoDto> getAll(String sortField, String order, String keyword, String filter, int page, int size){ 
         Sort.Direction direction = "desc".equalsIgnoreCase(order) ? Sort.Direction.DESC : Sort.Direction.ASC;
 
-        Sort sort = Sort.by(direction, sortField);
+        Pageable pageable = PageRequest.of(page, size, Sort.by(direction, sortField));
 
-        List<TodoEntity> entities;
+        Page<TodoEntity> entityPage;
         
         // 1.フィルタリング (done)
         if ("done".equals(filter)){
-            entities = repository.findByDone(true, sort);
+            entityPage = repository.findByDone(true, pageable);
         } else if ("notdone".equals(filter)){
-            entities = repository.findByDone(false, sort);
+            entityPage = repository.findByDone(false, pageable);
         } else {
             // 2.フィルタなし → 全件
-            entities = repository.findAll(sort);
+            entityPage = repository.findAll(pageable);
         }
 
-        // 3.検索(keyword) がある場合はさらに絞り込み
+        // 3.検索(keyword) がある場合はページング後に絞り込む
+        Page<TodoDto> dtoPage = entityPage.map(this::toDto);
+
         if(keyword != null && !keyword.isBlank()){
-            entities = entities.stream()
-                .filter(e -> e.getTitle().contains(keyword))
+            List<TodoDto> filtered = dtoPage.getContent().stream()
+                .filter(dto -> dto.getTitle().contains(keyword))
                 .toList();
+
+            return new PageImpl<>(filtered, pageable, filtered.size());
         }
-        return entities.stream()
-            .map(this::toDto)
-            .toList();
+        
+        return dtoPage;
     }
 
     //単独取得
@@ -107,3 +114,11 @@ public class TodoService {
         return new TodoDto(e.getId(), e.getTitle(), e.getDescription(), e.getDone(), e.getCreatedAt());
     }
 }
+/*memo
+Sort.Direction
+Spring Data Core APIのSort.Directionは指定された方向でソートを実行するための列挙型を提供する。
+- Sort.Direction.ASC: 昇順でソートを行うことを示す。
+- Sort.Direction.DESC: 降順でソートを行うことを示す
+Sort.by
+引数で受ける並べ替えの規則(Direction)とプロパティ名を基に、Sortオブジェクトを生成するための静的メソッド。
+*/
