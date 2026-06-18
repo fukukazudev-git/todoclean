@@ -389,19 +389,24 @@
 
                 <td>
                     <a 
-                        th:href="@{'/todo/' + ${todo.id} + '/edit'}"
-                        class="btn btn-sm btn-primary me-2"
-                    >
+                        th:href="@{/todo/{id}/edit(
+                            id=${todo.id},
+                            sort=${sort},
+                            order=${order},
+                            keyword=${keyword},
+                            filter=${filter},
+                            page=${todoPage.number}
+                        )}" class="btn btn-primary btn-sm">
                         <i 
                             class="fa-solid fa-pen"
                         >
                         </i>
                         編集
                     </a>
-
+                        
                     <button 
                         type="button" 
-                        class="btn btn-outline-danger btn-sm"
+                        class="btn btn-danger btn-sm"
                         data-bs-toggle="modal"
                         data-bs-target="#deleteModal"
                         th:attr="data-id=${todo.id}"
