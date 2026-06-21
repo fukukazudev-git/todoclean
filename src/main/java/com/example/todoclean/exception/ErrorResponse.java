@@ -2,6 +2,7 @@ package com.example.todoclean.exception;
 
 import java.time.LocalDateTime;
 import java.util.List;
+
 public class ErrorResponse {
 
     private LocalDateTime timestamp;
@@ -20,16 +21,28 @@ public class ErrorResponse {
         this.errors = errors;
     }
 
-    public LocalDateTime getTimestamp(){return timestamp;}
+    public LocalDateTime getTimestamp() {
+        return timestamp;
+    }
 
-    public int getStatus(){return status;}
+    public int getStatus() {
+        return status;
+    }
 
-    public String getError(){return error;}
+    public String getError() {
+        return error;
+    }
 
-    public String getMessage(){return message;}
-    
-    public String getPath(){return path;}
+    public String getMessage() {
+        return message;
+    }
 
-    public List<FieldValidationError> getErrors(){return errors;}
-    
+    public String getPath() {
+        return path;
+    }
+
+    public List<FieldValidationError> getErrors() {
+        return errors;
+    }
+
 }

@@ -52,6 +52,31 @@
                     type="hidden" 
                     th:field="*{version}"
                 >
+                <input 
+                    type="hidden" 
+                    name="sort" 
+                    th:value="${sort}"
+                >
+                <input 
+                    type="hidden" 
+                    name="order" 
+                    th:value="${order}"
+                >
+                <input 
+                    type="hidden" 
+                    name="keyword" 
+                    th:value="${keyword}"
+                >
+                <input 
+                    type="hidden" 
+                    name="filter" 
+                    th:value="${filter}"
+                >
+                <input 
+                    type="hidden" 
+                    name="page" 
+                    th:value="${page}"
+                >
 
                 <div 
                     class="mb-3"
@@ -80,11 +105,33 @@
                 </div>
 
 
-                <div 
+                <div
                     class="mb-3"
                 >
-                    <label 
-                        for="description" 
+                    <label
+                        class="form-label"
+                    >
+                        期限日
+                    </label>
+                    <input
+                        type="date"
+                        th:field="*{dueDate}"
+                        class="form-control"
+                        th:classappend="${#fields.hasErrors('dueDate')} ? 'is-invalid'"
+                    >
+                    <div
+                        class="invalid-feedback"
+                        th:if="${#fields.hasErrors('dueDate')}"
+                        th:errors="*{dueDate}"
+                    >
+                    </div>
+                </div>
+
+                <div
+                    class="mb-3"
+                >
+                    <label
+                        for="description"
                         class="form-label"
                     >
                         詳細
@@ -121,31 +168,6 @@
                         完了
                     </label>
                 </div>
-                <input 
-                    type="hidden" 
-                    name="sort" 
-                    th:value="${sort}"
-                >
-                <input 
-                    type="hidden" 
-                    name="order" 
-                    th:value="${order}"
-                >
-                <input 
-                    type="hidden" 
-                    name="keyword" 
-                    th:value="${keyword}"
-                >
-                <input 
-                    type="hidden" 
-                    name="filter" 
-                    th:value="${filter}"
-                >
-                <input 
-                    type="hidden" 
-                    name="page" 
-                    th:value="${page}"
-                >
 
                 <div 
                     class="card-footer text-end"
@@ -157,12 +179,13 @@
                         keyword=${keyword},
                         filter=${filter},
                         page=${page}
-                        )}" class="btn btn-secondary">
+                        )}" class="btn btn-secondary"
+                    >
                         <i
                             class="fa-solid fa-arrow-left"
                         >
                         </i>
-                        一覧に戻る
+                        戻る
                     </a>
                    
                     <button 
@@ -178,5 +201,9 @@
     </div>
 </div>
 
+<div
+    th:replace="~{layout :: scripts}"
+>
+</div>
 </body>
 </html>

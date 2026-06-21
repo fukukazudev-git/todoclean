@@ -1,54 +1,96 @@
 package com.example.todoclean.dto;
+
 import java.time.LocalDateTime;
+import java.time.LocalDate;
+
 //一覧用
-public class TodoDto{
+public class TodoDto {
 
     private Long id;
     private String title;
     private String description;
     private Boolean done;
     private LocalDateTime createdAt;
+    private LocalDate dueDate;
 
-    public TodoDto(){}
+    public TodoDto() {
+    }
 
-    public TodoDto(Long id , String title, String description, Boolean done, LocalDateTime createdAt){
+    public TodoDto(Long id, String title, String description, Boolean done, LocalDateTime createdAt,
+            LocalDate dueDate) {
         this.id = id;
         this.title = title;
         this.description = description;
         this.done = done;
         this.createdAt = createdAt;
+        this.dueDate = dueDate;
     }
 
-    public Long getId(){return id;}
-    public void setId(Long id){this.id = id;}
-    
-    public String getTitle(){return title;}
-    public void setTitle(String title){this.title = title;}
+    public Long getId() {
+        return id;
+    }
 
-    public String getDescription(){return description;}
-    public void setDescription(String description){this.description = description;}
+    public void setId(Long id) {
+        this.id = id;
+    }
 
-    public Boolean getDone(){return done;}
-    public void setDone(Boolean done){this.done = done;}
+    public String getTitle() {
+        return title;
+    }
 
-    public LocalDateTime getCreatedAt(){return createdAt;}
-    public void setCreatedAt(LocalDateTime createdAt){this.createdAt = createdAt;}
+    public void setTitle(String title) {
+        this.title = title;
+    }
+
+    public String getDescription() {
+        return description;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
+    }
+
+    public Boolean getDone() {
+        return done;
+    }
+
+    public void setDone(Boolean done) {
+        this.done = done;
+    }
+
+    public LocalDateTime getCreatedAt() {
+        return createdAt;
+    }
+
+    public void setCreatedAt(LocalDateTime createdAt) {
+        this.createdAt = createdAt;
+    }
+
+    public LocalDate getDueDate() {
+        return dueDate;
+    }
+
+    public void setDueDate(LocalDate dueDate) {
+        this.dueDate = dueDate;
+    }
 
 }
 
 /*
-@NotBlank
-文字列がnullでなく、空でなく、空白のみでないことを検証するアノテーション
-文字列の入力が必須である場合に使用される。
-@Size(max = 255)
-文字列の長さが指定された最大値以下であることを検証するアノテーション
-入力の長さ制限を設ける場合に使用される。
-@NotNull
-値がnullでないことを検証するアノテーション
-// id に@NotNull は付けない→
-// POSTでエラーになるため @NotNull(message = "id must not be null")
-// idはControllerのパスパラメータで受け取る
-// Boolean (ラッパークラス)
-// nullを取れる→@NotNullをつけられる。JSONからの入力でnullが来た場合に検知可能。
-//REST APIの入力はJSONのため、クライアントがdoneを送ってこない→null になるケースが存在する。
+ * @NotBlank
+ * 文字列がnullでなく、空でなく、空白のみでないことを検証するアノテーション
+ * 文字列の入力が必須である場合に使用される。
+ * 
+ * @Size(max = 255)
+ * 文字列の長さが指定された最大値以下であることを検証するアノテーション
+ * 入力の長さ制限を設ける場合に使用される。
+ * 
+ * @NotNull
+ * 値がnullでないことを検証するアノテーション
+ * // id に@NotNull は付けない→
+ * // POSTでエラーになるため @NotNull(message = "id must not be null")
+ * // idはControllerのパスパラメータで受け取る
+ * // Boolean (ラッパークラス)
+ * // nullを取れる→@NotNullをつけられる。JSONからの入力でnullが来た場合に検知可能。
+ * //REST APIの入力はJSONのため、クライアントがdoneを送ってこない→null になるケースが存在する。
  */

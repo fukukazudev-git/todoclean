@@ -1,9 +1,13 @@
 package com.example.todoclean.dto;
 
 import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
+
+import java.time.LocalDate;
+
 // POST用 
-public class TodoCreateRequest{
+public class TodoCreateRequest {
 
     @NotBlank(message = "タイトルは必須です")
     @Size(max = 50, message = "タイトルは50文字以内で入力してください")
@@ -14,13 +18,39 @@ public class TodoCreateRequest{
 
     private Boolean done;
 
-    public String getTitle(){return title;}
-    public void setTitle(String title){this.title = title;}
-    
-    public String getDescription(){return description;}
-    public void setDescription(String description){this.description = description;}
+    @NotNull(message = "期限日は必須です")
+    private LocalDate dueDate;
 
-    public Boolean getDone(){return done;}
-    public void setDone(Boolean done){this.done = done;}
+    public String getTitle() {
+        return title;
+    }
+
+    public void setTitle(String title) {
+        this.title = title;
+    }
+
+    public String getDescription() {
+        return description;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
+    }
+
+    public Boolean getDone() {
+        return done;
+    }
+
+    public void setDone(Boolean done) {
+        this.done = done;
+    }
+
+    public LocalDate getDueDate() {
+        return dueDate;
+    }
+
+    public void setDueDate(LocalDate dueDate) {
+        this.dueDate = dueDate;
+    }
 
 }

@@ -9,7 +9,7 @@ public class TodoCleanApplication {
 
 	public static void main(String[] args) {
 		SpringApplication.run(TodoCleanApplication.class, args);
-	
+
 	}
 
 }

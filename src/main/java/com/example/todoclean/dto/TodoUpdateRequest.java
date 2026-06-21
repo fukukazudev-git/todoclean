@@ -1,7 +1,9 @@
 package com.example.todoclean.dto;
 
 import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
+import java.time.LocalDate;
 
 // PUT用 全項目必須パターン
 public class TodoUpdateRequest {
@@ -11,27 +13,64 @@ public class TodoUpdateRequest {
     @NotBlank(message = "タイトルは必須です")
     @Size(max = 50, message = "タイトルは50文字以内で入力してください")
     private String title;
-   
+
     @Size(max = 200, message = "詳細は200文字以内で入力してください")
     private String description;
 
     private Boolean done;
     private Long version;
+    @NotNull(message = "期限日は必須です")
+    private LocalDate dueDate;
 
-    public TodoUpdateRequest(){}
+    public TodoUpdateRequest() {
+    }
 
-    public Long getId(){return id;}
-    public void setId(Long id){this.id = id;}
+    public Long getId() {
+        return id;
+    }
 
-    public String getTitle(){return title;}
-    public void setTitle(String title){this.title = title;}
-   
-    public String getDescription(){return description;}
-    public void setDescription(String description){this.description = description;}
-    
-    public Boolean getDone(){return done;}
-    public void setDone(Boolean done){this.done = done;}
+    public void setId(Long id) {
+        this.id = id;
+    }
 
-    public Long getVersion(){return version;}
-    public void setVersion(Long version){this.version = version;}
+    public String getTitle() {
+        return title;
+    }
+
+    public void setTitle(String title) {
+        this.title = title;
+    }
+
+    public String getDescription() {
+        return description;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
+    }
+
+    public Boolean getDone() {
+        return done;
+    }
+
+    public void setDone(Boolean done) {
+        this.done = done;
+    }
+
+    public Long getVersion() {
+        return version;
+    }
+
+    public void setVersion(Long version) {
+        this.version = version;
+    }
+
+    public LocalDate getDueDate() {
+        return dueDate;
+    }
+
+    public void setDueDate(LocalDate dueDate) {
+        this.dueDate = dueDate;
+    }
+
 }
