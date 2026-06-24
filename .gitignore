@@ -1,5 +1,8 @@
 HELP.md
 target/
+
+### 環境変数（秘匿情報なのでコミットしない。.env.example を雛形として共有する）
+.env
 .mvn/wrapper/maven-wrapper.jar
 !**/src/main/**/target/
 !**/src/test/**/target/

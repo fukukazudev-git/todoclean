@@ -48,12 +48,12 @@ public class TodoController {
     @PostMapping("/create")
     public String create(
             @Valid @ModelAttribute("form") TodoCreateRequest form,
+            BindingResult bindingResult,
             @RequestParam(defaultValue = "dueDate") String sort,
             @RequestParam(defaultValue = "asc") String order,
             @RequestParam(required = false) String keyword,
             @RequestParam(defaultValue = "notdone") String filter,
             @RequestParam(defaultValue = "0") int page,
-            BindingResult bindingResult,
             Model model) {
         if (bindingResult.hasErrors()) {
             model.addAttribute("sort", sort);
@@ -120,12 +120,12 @@ public class TodoController {
     public String update(
             @PathVariable Long id,
             @Valid @ModelAttribute("todo") TodoUpdateRequest form,
+            BindingResult bindingResult,
             @RequestParam(defaultValue = "dueDate") String sort,
             @RequestParam(defaultValue = "asc") String order,
             @RequestParam(required = false) String keyword,
             @RequestParam(defaultValue = "notdone") String filter,
             @RequestParam(defaultValue = "0") int page,
-            BindingResult bindingResult,
             Model model) {
         if (bindingResult.hasErrors()) {
             model.addAttribute("sort", sort);

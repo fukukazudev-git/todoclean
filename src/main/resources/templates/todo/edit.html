@@ -87,12 +87,13 @@
                     >
                         タイトル
                     </label>
-                    <input 
+                    <input
                         type="text"
                         id="title"
                         th:field="*{title}"
                         class="form-control"
                         th:classappend="${#fields.hasErrors('title')} ? 'is-invalid'"
+                        autofocus
                     >
                     
                     <div 

@@ -1,0 +1,44 @@
+services:
+  # ---------------------------------------------------------
+  # MySQL データベース
+  # ---------------------------------------------------------
+  db:
+    image: mysql:8
+    # .env から値を注入。初回起動時にDB・ユーザーを自動作成してくれる。
+    environment:
+      MYSQL_DATABASE: ${MYSQL_DATABASE}
+      MYSQL_USER: ${MYSQL_USER}
+      MYSQL_PASSWORD: ${MYSQL_PASSWORD}
+      MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD}
+    ports:
+      # ホスト側からも接続確認できるよう公開（任意。不要なら削除可）
+      - "3307:3306"
+    volumes:
+      # 名前付きボリュームにデータを保存し、コンテナを消してもデータが残るようにする
+      - db-data:/var/lib/mysql
+    healthcheck:
+      # MySQLが接続を受け付けられる状態かを定期チェック。
+      # これが healthy になるまで app は起動を待つ。
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost", "-p$MYSQL_ROOT_PASSWORD"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+
+  # ---------------------------------------------------------
+  # Spring Boot アプリ
+  # ---------------------------------------------------------
+  app:
+    build: .            # カレントディレクトリの Dockerfile をビルド
+    ports:
+      - "8080:8080"
+    environment:
+      # 接続先ホストはサービス名 "db"（composeが名前解決してくれる）
+      SPRING_DATASOURCE_URL: jdbc:mysql://db:3306/${MYSQL_DATABASE}?useSSL=false&allowPublicKeyRetrieval=true&serverTimezone=Asia/Tokyo
+      SPRING_DATASOURCE_USERNAME: ${MYSQL_USER}
+      SPRING_DATASOURCE_PASSWORD: ${MYSQL_PASSWORD}
+    depends_on:
+      db:
+        condition: service_healthy   # dbがhealthyになってから起動
+
+volumes:
+  db-data:

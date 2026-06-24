@@ -1,0 +1,19 @@
+# ビルド成果物（イメージ内で作り直すため不要）
+target/
+
+# git関連
+.git/
+.gitignore
+.gitattributes
+
+# IDE設定
+.idea/
+.vscode/
+*.iml
+
+# Docker/環境ファイル自体
+.env
+
+# その他
+HELP.md
+README.md
