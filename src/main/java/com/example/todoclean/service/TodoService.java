@@ -45,7 +45,8 @@ public class TodoService {
             int size) {
         Sort.Direction direction = "desc".equalsIgnoreCase(order) ? Sort.Direction.DESC : Sort.Direction.ASC;
 
-        if (!Set.of("title", "createdAt", "dueDate").contains(sortField)) sortField = "dueDate";
+        if (!Set.of("title", "createdAt", "dueDate").contains(sortField))
+            sortField = "dueDate";
         Pageable pageable = PageRequest.of(page, size, Sort.by(direction, sortField));
 
         boolean hasKeyword = keyword != null && !keyword.isBlank();

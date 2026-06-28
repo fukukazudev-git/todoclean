@@ -4,6 +4,7 @@ import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
 import java.time.LocalDate;
+import org.springframework.format.annotation.DateTimeFormat;
 
 // PUT用 全項目必須パターン
 public class TodoUpdateRequest {
@@ -20,6 +21,7 @@ public class TodoUpdateRequest {
     private Boolean done;
     private Long version;
     @NotNull(message = "期限日は必須です")
+    @DateTimeFormat(iso = DateTimeFormat.ISO.DATE)
     private LocalDate dueDate;
 
     public TodoUpdateRequest() {

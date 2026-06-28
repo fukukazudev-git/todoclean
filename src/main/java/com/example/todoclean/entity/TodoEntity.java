@@ -11,16 +11,17 @@ public class TodoEntity {
 
     // Hibernateのアクセス戦略は最初に見つかった永続化アノテーションの位置で決まる
     // プロパティアクセスの方針でいく場合、フィールドにアノテーションは付けず、getterにつける
-    // IDを主キーとして自動生成する設定
+    // IDを主キーとして自動生成する
     @Id
-    // ID生成の戦略をIDENTITYに設定することで、データベースが自動的にIDを生成するようになる
+    // 戦略
+    // IDENTITY : DBのAUTO_INCREMENTに任せる → MySQL・PostgreSQL単体向け
+    // INSERT後にDBからIDを取得する仕様のため、、一括INSERTのパフォーマンスが低下する欠点がある
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     private String title;
     private String description;
     private Boolean done;
 
-    @Column(name = "opt_lock_version")
     @Version
     private Long version = 0L; // 楽観的ロックのためのバージョンフィールド
 
