@@ -1,10 +1,9 @@
 package com.example.todoclean.exception;
 
-import jakarta.persistence.OptimisticLockException;
-
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.method.annotation.MethodArgumentTypeMismatchException;
+import org.springframework.dao.OptimisticLockingFailureException;
 import org.springframework.ui.Model;
 
 @ControllerAdvice(basePackages = "com.example.todoclean.controller") // コントローラー層の例外を処理することを宣言
@@ -16,8 +15,8 @@ public class MvcExceptionHandler {
         return "error/404";
     }
 
-    @ExceptionHandler(OptimisticLockException.class)
-    public String handleOptimisticLock(Model model) {
+    @ExceptionHandler(OptimisticLockingFailureException.class)
+    public String handleOptimisticLockingFailure(Model model) {
         model.addAttribute("errorMessage", "ほかのユーザーが先に更新しました。再度編集してください。");
         return "error/409";
     }

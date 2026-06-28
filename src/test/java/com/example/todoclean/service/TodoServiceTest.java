@@ -129,7 +129,7 @@ class TodoServiceTest {
 
         // JPAの変更検知で更新されるため、エンティティの中身が書き換わっていることを検証
         assertThat(stored.getTitle()).isEqualTo("買い物（更新）");
-        assertThat(stored.getDone()).isTrue();
+        assertThat(stored.isDone()).isTrue();
         assertThat(stored.getDueDate()).isEqualTo(LocalDate.of(2026, 8, 1));
     }
 }

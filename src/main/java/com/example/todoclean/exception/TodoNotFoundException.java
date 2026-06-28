@@ -4,6 +4,7 @@ package com.example.todoclean.exception;
 //チェック例外(Exception)にするとtry-catchが必要になり、Springの思想と逆行する
 public class TodoNotFoundException extends RuntimeException {
     public TodoNotFoundException(Long id) {
+        // RuntimeException(String message)
         super("Todo not found: " + id);
     }
 }

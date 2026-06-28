@@ -7,6 +7,7 @@ import java.util.List;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.data.domain.Sort;
+import org.springframework.dao.OptimisticLockingFailureException;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.PageRequest;
@@ -15,8 +16,6 @@ import com.example.todoclean.dto.*;
 import com.example.todoclean.entity.TodoEntity;
 import com.example.todoclean.exception.TodoNotFoundException;
 import com.example.todoclean.repository.TodoRepository;
-
-import jakarta.persistence.OptimisticLockException;
 
 @Service
 @Transactional // 更新処理が途中で失敗した場合でもロールバック
@@ -45,14 +44,21 @@ public class TodoService {
             int size) {
         Sort.Direction direction = "desc".equalsIgnoreCase(order) ? Sort.Direction.DESC : Sort.Direction.ASC;
 
+        // List: 順序を保持し、重複要素を許容する
+        // Set: 順序を保証せず、重複要素を許容しない
+        // of: immutableなSetを作成
+        // contains: リスト内に特定の要素が存在するか確認
         if (!Set.of("title", "createdAt", "dueDate").contains(sortField))
             sortField = "dueDate";
+        // Pageableは ページに関するリクエスト情報を持つインターフェース
+        // PageRequestはその実装クラスで.ofでインスタンスを生成
         Pageable pageable = PageRequest.of(page, size, Sort.by(direction, sortField));
 
         boolean hasKeyword = keyword != null && !keyword.isBlank();
         boolean isDone = "done".equals(filter);
         boolean isNotDone = "notdone".equals(filter);
 
+        // Page<T> データ本体+ページ情報のレスポンス
         Page<TodoEntity> entityPage;
         if (hasKeyword && isDone)
             entityPage = repository.findByDoneAndTitleContaining(true, keyword, pageable);
@@ -79,7 +85,7 @@ public class TodoService {
                 entity.getId(),
                 entity.getTitle(),
                 entity.getDescription(),
-                entity.getDone(),
+                entity.isDone(),
                 entity.getVersion(),
                 entity.getDueDate());
     }
@@ -88,13 +94,15 @@ public class TodoService {
     @Transactional
     public void update(Long id, TodoUpdateRequest form) {
 
-        // orElseThrow()は値が無い場合に例外を投げる
         TodoEntity entity = repository.findById(id)
                 .orElseThrow(() -> new TodoNotFoundException(id));
 
-        // 同時更新防止
+        // WebアプリではHTTPリクエストをまたぐため明示的比較が必要
+        // リクエストA(編集画面開く) findById → entity.version=1 → レスポンス返却 → エンティティ破棄
+        // リクエストB(更新ボタン押下) findById → entity.version=?(DBから新規ロード)
+        // リクエストをまたいだ時点でHibernateのスナップショットが消えるため、フォームからversion=1を受け取って比較する
         if (!entity.getVersion().equals(form.getVersion())) {
-            throw new OptimisticLockException();
+            throw new OptimisticLockingFailureException("他のユーザーが更新しました");
         }
 
         entity.setTitle(form.getTitle());
@@ -105,7 +113,7 @@ public class TodoService {
     }
 
     // 削除処理
-    // 削除処理はDBを更新するのでトランザクションを付ける
+    // DBを更新するのでトランザクションを付ける
     @Transactional
     public void delete(Long id) {
         TodoEntity entity = repository.findById(id)
@@ -119,23 +127,14 @@ public class TodoService {
         repository.deleteAllById(ids); // JpaRepositoryに既存メソッド有
     }
 
-    // DTO変換をメソッド化、コードの重複を減らし、保守性も上げる
+    // DTO変換をメソッド化
     private TodoDto toDto(TodoEntity e) {
         return new TodoDto(
                 e.getId(),
                 e.getTitle(),
                 e.getDescription(),
-                e.getDone(),
+                e.isDone(),
                 e.getCreatedAt(),
                 e.getDueDate());
     }
 }
-/*
- * memo
- * Sort.Direction
- * Spring Data Core APIのSort.Directionは指定された方向でソートを実行するための列挙型を提供する。
- * - Sort.Direction.ASC: 昇順でソートを行うことを示す。
- * - Sort.Direction.DESC: 降順でソートを行うことを示す
- * Sort.by
- * 引数で受ける並べ替えの規則(Direction)とプロパティ名を基に、Sortオブジェクトを生成するための静的メソッド。
- */

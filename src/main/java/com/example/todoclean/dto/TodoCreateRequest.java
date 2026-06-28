@@ -18,6 +18,8 @@ public class TodoCreateRequest {
 
     private Boolean done;
 
+    // iso: ISO標準フォーマットを使用
+    // ISO.DATE: ISO-8601(yyyy-MM-dd)の日付形式として設定
     @NotNull(message = "期限日は必須です")
     @DateTimeFormat(iso = DateTimeFormat.ISO.DATE)
     private LocalDate dueDate;

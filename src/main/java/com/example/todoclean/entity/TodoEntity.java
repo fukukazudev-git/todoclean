@@ -9,21 +9,23 @@ import java.time.LocalDateTime;
 @Entity
 public class TodoEntity {
 
-    // Hibernateのアクセス戦略は最初に見つかった永続化アノテーションの位置で決まる
-    // プロパティアクセスの方針でいく場合、フィールドにアノテーションは付けず、getterにつける
     // IDを主キーとして自動生成する
     @Id
     // 戦略
     // IDENTITY : DBのAUTO_INCREMENTに任せる → MySQL・PostgreSQL単体向け
-    // INSERT後にDBからIDを取得する仕様のため、、一括INSERTのパフォーマンスが低下する欠点がある
+    // INSERT後にDBからIDを取得する仕様のため、一括INSERTのパフォーマンスが低下する欠点がある
+    // INSERT → ID確認 → 次のINSERT → ID確認 と1件ずつ処理する。連番を取得してまとめてINSERTする場合はSEQUENCEで可能
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     private String title;
     private String description;
-    private Boolean done;
+    // DBカラムはNOT NULL制約が効いてnullになり得ないためプリミティブ型で定義
+    private boolean done;
 
+    // 楽観的ロックのためのバージョンフィールド
+    // 0Lで初期化しているので実害はないが、Hibernateが@Versionフィールドをnullチェックする仕様のためラッパークラスで定義
     @Version
-    private Long version = 0L; // 楽観的ロックのためのバージョンフィールド
+    private Long version = 0L;
 
     // updatable=falseで、更新時に作成日時が変更されないようにする
     @Column(nullable = false, updatable = false)
@@ -34,7 +36,7 @@ public class TodoEntity {
     protected TodoEntity() {
     }
 
-    public TodoEntity(String title, String description, Boolean done, LocalDateTime createdAt, LocalDate dueDate) {
+    public TodoEntity(String title, String description, boolean done, LocalDateTime createdAt, LocalDate dueDate) {
         this.title = title;
         this.description = description;
         this.done = done;
@@ -61,11 +63,11 @@ public class TodoEntity {
     // boolean型のgetterはisXxxが正しい
     // 一方で、Boolean(ラッパー型)の getterはgetXxx()
     // HibernateはJavaBeans規約に非常に敏感でgetter/setterの命名が崩れるとプロパティ解析が壊れる
-    public Boolean getDone() {
+    public boolean isDone() {
         return done;
     }
 
-    public void setDone(Boolean done) {
+    public void setDone(boolean done) {
         this.done = done;
     }
 

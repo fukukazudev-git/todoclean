@@ -20,6 +20,7 @@ public class TodoUpdateRequest {
 
     private Boolean done;
     private Long version;
+
     @NotNull(message = "期限日は必須です")
     @DateTimeFormat(iso = DateTimeFormat.ISO.DATE)
     private LocalDate dueDate;
