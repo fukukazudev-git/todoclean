@@ -5,15 +5,17 @@
 
 <header th:replace="~{layout :: header}"></header>
 
-<div class="alert alert-warning">
-    <i class="fa-solid fa-triangle-exclamation"></i>
-    <strong>他のユーザーが先に更新しました。</strong>
-    <p class="mt-2">再度変種画面を開いて、最新の内容に更新してください。</p>
-</div>
+<main class="container mt-4">
+    <div class="alert alert-warning">
+        <i class="fa-solid fa-triangle-exclamation"></i>
+        <strong>他のユーザーが先に更新しました。</strong>
+        <p class="mt-2">再度編集画面を開いて、最新の内容に更新してください。</p>
+    </div>
 
-<a href="/todo" class="btn btn-secondary mt-3">
-    <i class="fa-solid fa-arrow-left"></i> 一覧に戻る
-</a>
+    <a href="/todo" class="btn btn-secondary mt-3">
+        <i class="fa-solid fa-arrow-left"></i> 一覧に戻る
+    </a>
+</main>
 
 </body>
 </html>

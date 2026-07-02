@@ -10,11 +10,11 @@
     th:replace="~{layout :: header}"
 >
 </header>
-<div 
+<main
     class="container"
 >
 
-    <div 
+    <div
         class="d-flex justify-content-between align-items-center mt-3"
     >
         <h3 
@@ -23,54 +23,51 @@
             ToDo 一覧
         </h3>
         <!-- 検索フォーム -->
-        <div 
-            class="d-flex"
+        
+        <form 
+            method="get" 
+            class="d-flex" 
+            th:action="@{/todo}" 
+            style="max-width: 400px; height: 40px;"
         >
-            <form 
-                method="get" 
-                class="d-flex" 
-                th:action="@{/todo}" 
-                style="max-width: 400px; height: 40px;"
+            <input 
+                type="text" 
+                name="keyword" 
+                class="form-control me-2" 
+                placeholder="タイトルで検索" 
+                th:value="${keyword}"
             >
-                <input 
-                    type="text" 
-                    name="keyword" 
-                    class="form-control me-2" 
-                    placeholder="タイトルで検索" 
-                    th:value="${keyword}"
-                >
-                <button 
-                    type="submit" 
-                    class="btn btn-outline-primary me-2" 
-                    style="width: 150px;"
-                >
-                    <i class="fa-solid fa-magnifying-glass"></i>検索
-                </button>
-                <a 
-                    th:href="@{/todo(sort=${sort}, order=${order})}" 
-                    class="btn btn-outline-secondary" 
-                    style="width: 110px;"
-                >
-                    クリア
-                </a>
-                <input
-                    type="hidden"
-                    name="sort"
-                    th:value="${sort}"
-                >
-                <input
-                    type="hidden"
-                    name="order"
-                    th:value="${order}"
-                >
-                <input
-                    type="hidden"
-                    name="filter"
-                    th:value="${filter}"
-                >
-                
-            </form>
-        </div>
+            <button 
+                type="submit" 
+                class="btn btn-outline-primary me-2" 
+                style="width: 150px;"
+            >
+                <i class="fa-solid fa-magnifying-glass"></i>検索
+            </button>
+            <a 
+                th:href="@{/todo(sort=${sort}, order=${order})}" 
+                class="btn btn-outline-secondary" 
+                style="width: 110px;"
+            >
+                クリア
+            </a>
+            <input
+                type="hidden"
+                name="sort"
+                th:value="${sort}"
+            >
+            <input
+                type="hidden"
+                name="order"
+                th:value="${order}"
+            >
+            <input
+                type="hidden"
+                name="filter"
+                th:value="${filter}"
+            >
+            
+        </form>
     </div>
 
     <div 
@@ -90,6 +87,13 @@
         >
             <i class="fa-solid fa-plus"></i> 新規作成
         </a>
+        <button
+            type="button"
+            class="btn btn-success me-3"
+            onclick="submitBulkComplete()"
+        >
+            <i class="fa-solid fa-check"></i> 選択完了
+        </button>
         <button
             type="button"
             class="btn btn-danger"
@@ -467,11 +471,9 @@
                         th:text="${todo.title}"
                     >
                     </td>
-                    <td>
-                        <span 
-                            th:text="${todo.done ? '✓' : ''}"
-                        >
-                        </span>
+                    <td 
+                        th:text="${todo.done ? '✓' : ''}"
+                    >
                     </td>
                     <td 
                         style="
@@ -606,12 +608,12 @@
     </div>
 
 
-</div>
+</main>
 
-<div 
+<th:block
     th:replace="~{layout :: scripts}"
 >
-</div>
+</th:block>
 <script>
     document.addEventListener('keydown', function(e){
         if (e.altKey && e.key === 'n'){
@@ -634,6 +636,7 @@
     });
 
     // 選択削除ボタン
+    // bulkDeleteForm は完了・削除の共用フォーム。送信先(action)をボタンごとに切り替える。
     function submitBulkDelete() {
         const checked = document.querySelectorAll('input[name="ids"]:checked');
         if (checked.length === 0) {
@@ -641,7 +644,23 @@
             return;
         }
         if (confirm(`${checked.length}件を削除しますか？`)) {
-            document.getElementById('bulkDeleteForm').submit();
+            const form = document.getElementById('bulkDeleteForm');
+            form.action = '/todo/delete-bulk';
+            form.submit();
+        }
+    }
+
+    // 選択完了ボタン
+    function submitBulkComplete() {
+        const checked = document.querySelectorAll('input[name="ids"]:checked');
+        if (checked.length === 0) {
+            alert('完了する項目を選択してください。');
+            return;
+        }
+        if (confirm(`${checked.length}件を完了にしますか？`)) {
+            const form = document.getElementById('bulkDeleteForm');
+            form.action = '/todo/complete-bulk';
+            form.submit();
         }
     }
 

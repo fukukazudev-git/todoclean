@@ -5,14 +5,16 @@
 
 <header th:replace="~{layout :: header}"></header>
 
-<div class="alert alert-danger">
-    <i class="fa-solid fa-circle-exclamation"></i>
-    <strong>指定された Todo は存在しません。</strong>
-</div>
+<main class="container mt-4">
+    <div class="alert alert-danger">
+        <i class="fa-solid fa-circle-exclamation"></i>
+        <strong>指定された Todo は存在しません。</strong>
+    </div>
 
-<a href="/todo" class="btn btn-secondary mt-3">
-    <i class="fa-solid fa-arrow-left"></i> 一覧に戻る
-</a>
+    <a href="/todo" class="btn btn-secondary mt-3">
+        <i class="fa-solid fa-arrow-left"></i> 一覧に戻る
+    </a>
+</main>
 
 </body>
 </html>

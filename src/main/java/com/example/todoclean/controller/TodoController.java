@@ -180,6 +180,24 @@ public class TodoController {
                 "&page=" + page;
     }
 
+    @PostMapping("/complete-bulk")
+    public String completeBulk(
+            @RequestParam(required = false) List<Long> ids,
+            @RequestParam(defaultValue = "dueDate") String sort,
+            @RequestParam(defaultValue = "asc") String order,
+            @RequestParam(required = false) String keyword,
+            @RequestParam(defaultValue = "notdone") String filter,
+            @RequestParam(defaultValue = "0") int page) {
+        if (ids != null && !ids.isEmpty()) {
+            todoService.markDoneAll(ids);
+        }
+        return "redirect:/todo?sort=" + sort +
+                "&order=" + order +
+                "&keyword=" + (keyword == null ? "" : keyword) +
+                "&filter=" + filter +
+                "&page=" + page;
+    }
+
 }
 /*
  * memo

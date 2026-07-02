@@ -64,6 +64,17 @@ class TodoControllerTest {
     }
 
     @Test
+    void completeBulk_一覧へリダイレクトしServiceを呼ぶ() throws Exception {
+        mockMvc.perform(post("/todo/complete-bulk")
+                        .param("ids", "1")
+                        .param("ids", "2"))
+                .andExpect(status().is3xxRedirection())
+                .andExpect(redirectedUrlPattern("/todo?*"));
+
+        verify(todoService).markDoneAll(java.util.List.of(1L, 2L));
+    }
+
+    @Test
     void create_タイトル未入力ならバリデーションエラーで作成画面に戻る() throws Exception {
         mockMvc.perform(post("/todo/create")
                         .param("title", "")              // @NotBlank に違反

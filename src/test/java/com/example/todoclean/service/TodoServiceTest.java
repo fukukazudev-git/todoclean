@@ -18,6 +18,7 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.dao.OptimisticLockingFailureException;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
@@ -29,8 +30,6 @@ import com.example.todoclean.dto.TodoUpdateRequest;
 import com.example.todoclean.entity.TodoEntity;
 import com.example.todoclean.exception.TodoNotFoundException;
 import com.example.todoclean.repository.TodoRepository;
-
-import jakarta.persistence.OptimisticLockException;
 
 /**
  * Service層の単体テスト。
@@ -110,7 +109,20 @@ class TodoServiceTest {
         form.setVersion(5L); // 画面が持っていた古い/食い違うバージョン
 
         assertThatThrownBy(() -> service.update(1L, form))
-                .isInstanceOf(OptimisticLockException.class);
+                .isInstanceOf(OptimisticLockingFailureException.class);
+    }
+
+    @Test
+    void markDoneAll_対象エンティティのdoneがtrueになる() {
+        TodoEntity a = entity("買い物"); // done は初期値 false
+        TodoEntity b = entity("掃除");
+        when(repository.findAllById(List.of(1L, 2L))).thenReturn(List.of(a, b));
+
+        service.markDoneAll(List.of(1L, 2L));
+
+        // JPAの変更検知で更新されるため、取得したエンティティの done が書き換わっていることを検証
+        assertThat(a.isDone()).isTrue();
+        assertThat(b.isDone()).isTrue();
     }
 
     @Test

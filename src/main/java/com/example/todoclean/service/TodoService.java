@@ -127,6 +127,15 @@ public class TodoService {
         repository.deleteAllById(ids); // JpaRepositoryに既存メソッド有
     }
 
+    // 一括完了処理
+    // findAllByIdで取得したエンティティは管理下に入るため、setDoneするだけで
+    // 変更検知(dirty checking)によりUPDATEが発行され、@Versionも正しく更新される。
+    // 一括@Modifying UPDATEは楽観ロックを回避してしまうので採用しない(update()と方針を統一)。
+    @Transactional
+    public void markDoneAll(List<Long> ids) {
+        repository.findAllById(ids).forEach(e -> e.setDone(true));
+    }
+
     // DTO変換をメソッド化
     private TodoDto toDto(TodoEntity e) {
         return new TodoDto(
