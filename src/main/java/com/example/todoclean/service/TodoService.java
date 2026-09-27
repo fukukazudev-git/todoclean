@@ -82,7 +82,6 @@ public class TodoService {
                 entity.getDueDate());
     }
 
-    @Transactional
     public void update(Long id, TodoUpdateRequest form) {
 
         TodoEntity entity = repository.findById(id)
@@ -103,7 +102,6 @@ public class TodoService {
 
     }
 
-    @Transactional
     public void delete(Long id) {
         TodoEntity entity = repository.findById(id)
                 .orElseThrow(() -> new TodoNotFoundException(id));
@@ -111,7 +109,6 @@ public class TodoService {
     }
 
     // 一括削除
-    @Transactional
     public void deleteAll(List<Long> ids) {
         repository.deleteAllById(ids);
     }
@@ -120,7 +117,6 @@ public class TodoService {
     // findAllByIdで取得したエンティティは管理下に入るため、setDoneするだけで
     // 変更検知(dirty checking)によりUPDATEが発行され、@Versionも正しく更新される。
     // 一括@Modifying UPDATEは楽観ロックを回避してしまうので採用しない(update()と方針を統一)。
-    @Transactional
     public void markDoneAll(List<Long> ids) {
         repository.findAllById(ids).forEach(e -> e.setDone(true));
     }
