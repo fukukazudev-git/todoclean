@@ -6,7 +6,6 @@ import jakarta.validation.constraints.Size;
 import java.time.LocalDate;
 import org.springframework.format.annotation.DateTimeFormat;
 
-// PUT用 全項目必須パターン
 public class TodoUpdateRequest {
 
     private Long id;

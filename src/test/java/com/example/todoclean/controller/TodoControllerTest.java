@@ -31,13 +31,7 @@ import com.example.todoclean.dto.TodoUpdateRequest;
 import com.example.todoclean.exception.TodoNotFoundException;
 import com.example.todoclean.service.TodoService;
 
-/**
- * Controller層のテスト（MVC版）。
- * 
- * @WebMvcTest はWeb層（コントローラー）だけを起動し、Service層はモックに差し替える。
- *             REST APIなら「返るJSON」を検証するところを、画面アプリでは
- *             「どのビュー(HTMLテンプレート)を返すか」「画面に渡すModelの中身」を検証するのがポイント。
- */
+// @WebMvcTest はWeb層（コントローラー）だけを起動し、Service層はモックに差し替える。
 @WebMvcTest(TodoController.class)
 class TodoControllerTest {
 

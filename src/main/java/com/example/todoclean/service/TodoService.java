@@ -27,14 +27,13 @@ public class TodoService {
         this.repository = repository;
     }
 
-    // 登録処理(保存)
     public void create(TodoCreateRequest request) {
         TodoEntity entity = new TodoEntity(request.getTitle(), request.getDescription(), request.getDone(),
                 LocalDateTime.now(), request.getDueDate());
         repository.save(entity);
     }
 
-    // 全件取得
+    @Transactional(readOnly = true)
     public Page<TodoDto> getAll(
             String sortField,
             String order,
@@ -44,14 +43,9 @@ public class TodoService {
             int size) {
         Sort.Direction direction = "desc".equalsIgnoreCase(order) ? Sort.Direction.DESC : Sort.Direction.ASC;
 
-        // List: 順序を保持し、重複要素を許容する
-        // Set: 順序を保証せず、重複要素を許容しない
-        // of: immutableなSetを作成
-        // contains: リスト内に特定の要素が存在するか確認
         if (!Set.of("title", "createdAt", "dueDate").contains(sortField))
             sortField = "dueDate";
-        // Pageableは ページに関するリクエスト情報を持つインターフェース
-        // PageRequestはその実装クラスで.ofでインスタンスを生成
+
         Pageable pageable = PageRequest.of(page, size, Sort.by(direction, sortField));
 
         boolean hasKeyword = keyword != null && !keyword.isBlank();
@@ -76,7 +70,7 @@ public class TodoService {
         return entityPage.map(this::toDto);
     }
 
-    // 単独取得
+    @Transactional(readOnly = true)
     public TodoDetailResponse getById(Long id) {
         TodoEntity entity = repository.findById(id)
                 .orElseThrow(() -> new TodoNotFoundException(id));
@@ -90,8 +84,6 @@ public class TodoService {
                 entity.getDueDate());
     }
 
-    // 更新処理
-    @Transactional
     public void update(Long id, TodoUpdateRequest form) {
 
         TodoEntity entity = repository.findById(id)
@@ -112,26 +104,21 @@ public class TodoService {
 
     }
 
-    // 削除処理
-    // DBを更新するのでトランザクションを付ける
-    @Transactional
     public void delete(Long id) {
         TodoEntity entity = repository.findById(id)
                 .orElseThrow(() -> new TodoNotFoundException(id));
         repository.delete(entity);
     }
 
-    // 一括削除処理
-    @Transactional
+    // 一括削除
     public void deleteAll(List<Long> ids) {
-        repository.deleteAllById(ids); // JpaRepositoryに既存メソッド有
+        repository.deleteAllById(ids);
     }
 
-    // 一括完了処理
+    // 一括完了
     // findAllByIdで取得したエンティティは管理下に入るため、setDoneするだけで
     // 変更検知(dirty checking)によりUPDATEが発行され、@Versionも正しく更新される。
     // 一括@Modifying UPDATEは楽観ロックを回避してしまうので採用しない(update()と方針を統一)。
-    @Transactional
     public void markDoneAll(List<Long> ids) {
         repository.findAllById(ids).forEach(e -> e.setDone(true));
     }
