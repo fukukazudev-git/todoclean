@@ -33,6 +33,7 @@ public class TodoService {
         repository.save(entity);
     }
 
+    @Transactional(readOnly = true)
     public Page<TodoDto> getAll(
             String sortField,
             String order,
@@ -69,6 +70,7 @@ public class TodoService {
         return entityPage.map(this::toDto);
     }
 
+    @Transactional(readOnly = true)
     public TodoDetailResponse getById(Long id) {
         TodoEntity entity = repository.findById(id)
                 .orElseThrow(() -> new TodoNotFoundException(id));
