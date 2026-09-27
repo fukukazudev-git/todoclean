@@ -5,25 +5,20 @@ import jakarta.persistence.*;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 
-//DBのテーブルになる
 @Entity
 public class TodoEntity {
 
     // IDを主キーとして自動生成する
     @Id
-    // 戦略
-    // IDENTITY : DBのAUTO_INCREMENTに任せる → MySQL・PostgreSQL単体向け
-    // INSERT後にDBからIDを取得する仕様のため、一括INSERTのパフォーマンスが低下する欠点がある
-    // INSERT → ID確認 → 次のINSERT → ID確認 と1件ずつ処理する。連番を取得してまとめてINSERTする場合はSEQUENCEで可能
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     private String title;
     private String description;
-    // DBカラムはNOT NULL制約が効いてnullになり得ないためプリミティブ型で定義
+    // th:field のチェックボックスは未チェック時も hidden の _done により false が送信され
+    // null にならないためプリミティブ型で定義
     private boolean done;
 
     // 楽観的ロックのためのバージョンフィールド
-    // 0Lで初期化しているので実害はないが、Hibernateが@Versionフィールドをnullチェックする仕様のためラッパークラスで定義
     @Version
     private Long version = 0L;
 
@@ -60,9 +55,7 @@ public class TodoEntity {
         this.title = title;
     }
 
-    // boolean型のgetterはisXxxが正しい
-    // 一方で、Boolean(ラッパー型)の getterはgetXxx()
-    // HibernateはJavaBeans規約に非常に敏感でgetter/setterの命名が崩れるとプロパティ解析が壊れる
+    // プリミティブ boolean の getter は慣例通り isXxx() とする(Boolean ラッパー型なら getXxx())
     public boolean isDone() {
         return done;
     }

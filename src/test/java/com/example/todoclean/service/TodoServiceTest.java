@@ -35,7 +35,6 @@ import com.example.todoclean.repository.TodoRepository;
  * Service層の単体テスト。
  * DBやSpringコンテナは起動せず、Repositoryを「モック（偽物）」に差し替えて、
  * TodoServiceのロジック（分岐・例外）だけを高速に検証する。
- * 出口がJSONか画面かに関係なく成立する、最も価値の高いテスト層。
  */
 @ExtendWith(MockitoExtension.class)
 class TodoServiceTest {

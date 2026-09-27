@@ -3,7 +3,6 @@ package com.example.todoclean.dto;
 import java.time.LocalDate;
 import org.springframework.format.annotation.DateTimeFormat;
 
-//getById()とupdate()の戻り値に使用するDTO
 public class TodoDetailResponse {
 
     private Long id;

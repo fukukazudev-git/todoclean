@@ -1,10 +1,8 @@
 package com.example.todoclean.exception;
 
-//Springの例外処理は非チェック例外を前提にしているため、RuntimeExceptionを継承
-//チェック例外(Exception)にするとtry-catchが必要になり、Springの思想と逆行する
+// @Transactional は既定で非チェック例外の時のみロールバックするため、RuntimeExceptionを継承
 public class TodoNotFoundException extends RuntimeException {
     public TodoNotFoundException(Long id) {
-        // RuntimeException(String message)
         super("Todo not found: " + id);
     }
 }

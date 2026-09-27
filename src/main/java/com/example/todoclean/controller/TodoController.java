@@ -20,13 +20,10 @@ public class TodoController {
 
     private final TodoService todoService;
 
-    // コンストラクタインジェクション
     public TodoController(TodoService todoService) {
         this.todoService = todoService;
     }
 
-    // 新規作成フォーム表示
-    // フォームを準備して、HTMLテンプレートに渡す
     @GetMapping("/create")
     public String createForm(
             @RequestParam(defaultValue = "dueDate") String sort,
@@ -44,7 +41,6 @@ public class TodoController {
         return "todo/create";
     }
 
-    // 新規作成処理呼び出し+画面遷移
     @PostMapping("/create")
     public String create(
             @Valid @ModelAttribute("form") TodoCreateRequest form,
@@ -61,7 +57,7 @@ public class TodoController {
             model.addAttribute("keyword", keyword);
             model.addAttribute("filter", filter);
             model.addAttribute("page", page);
-            return "todo/create"; // 入力画面に戻す
+            return "todo/create";
         }
         todoService.create(form);
         return "redirect:/todo?sort=" + sort +
@@ -71,7 +67,6 @@ public class TodoController {
                 "&page=" + page;
     }
 
-    // 一覧ページ表示
     @GetMapping
     public String list(
             @RequestParam(defaultValue = "dueDate") String sort,
@@ -92,9 +87,7 @@ public class TodoController {
         return "todo/list";
     }
 
-    // 編集ページを表示
     @GetMapping("/{id}/edit")
-    // ModelはSpringが注入する。コントローラーからHTMLテンプレートに値を渡すためのオブジェクト
     public String editForm(
             @PathVariable Long id,
             @RequestParam(defaultValue = "dueDate") String sort,
@@ -111,12 +104,10 @@ public class TodoController {
         model.addAttribute("keyword", keyword);
         model.addAttribute("filter", filter);
         model.addAttribute("page", page);
-        return "todo/edit"; // templates/todo/edit.html を表示
+        return "todo/edit";
     }
 
-    // 更新処理
     @PutMapping("/{id}")
-    // @ModelAttributeはリクエストパラメータをJavaオブジェクトにバインドするためのアノテーション
     public String update(
             @PathVariable Long id,
             @Valid @ModelAttribute("todo") TodoUpdateRequest form,
@@ -133,11 +124,10 @@ public class TodoController {
             model.addAttribute("keyword", keyword);
             model.addAttribute("filter", filter);
             model.addAttribute("page", page);
-            return "todo/edit"; // エラー時は編集画面に戻す
+            return "todo/edit";
         }
         todoService.update(id, form);
-        // 更新後はリダイレクトして一覧画面に遷移する
-        // 理由は更新自体されたかわかりにくいのと同時更新を防ぐため
+
         return "redirect:/todo?sort=" + sort +
                 "&order=" + order +
                 "&keyword=" + (keyword == null ? "" : keyword) +
@@ -145,8 +135,7 @@ public class TodoController {
                 "&page=" + page;
     }
 
-    // 削除とその後のリダイレクト
-    @DeleteMapping("/{id}") // 画面遷移なので viod ではなく String を返す
+    @DeleteMapping("/{id}")
     public String delete(
             @PathVariable Long id,
             @RequestParam(defaultValue = "dueDate") String sort,
@@ -162,6 +151,7 @@ public class TodoController {
                 "&page=" + page;
     }
 
+    // 一括削除
     @PostMapping("/delete-bulk")
     public String deleteBulk(
             @RequestParam(required = false) List<Long> ids,
@@ -180,6 +170,7 @@ public class TodoController {
                 "&page=" + page;
     }
 
+    // 一括完了
     @PostMapping("/complete-bulk")
     public String completeBulk(
             @RequestParam(required = false) List<Long> ids,
@@ -199,10 +190,3 @@ public class TodoController {
     }
 
 }
-/*
- * memo
- * 
- * @RequestParam
- * リクエストパラメータをコントローラーメソッドの引数にバインドするためのアノテーション。
- * パラメータの型がString以外の場合、自動的に型変換が行われる。
- */

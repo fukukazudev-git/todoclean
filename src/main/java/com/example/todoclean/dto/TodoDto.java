@@ -3,7 +3,6 @@ package com.example.todoclean.dto;
 import java.time.LocalDateTime;
 import java.time.LocalDate;
 
-//一覧用
 public class TodoDto {
 
     private Long id;
@@ -75,22 +74,3 @@ public class TodoDto {
     }
 
 }
-
-/*
- * @NotBlank
- * 文字列がnullでなく、空でなく、空白のみでないことを検証するアノテーション
- * 文字列の入力が必須である場合に使用される。
- * 
- * @Size(max = 255)
- * 文字列の長さが指定された最大値以下であることを検証するアノテーション
- * 入力の長さ制限を設ける場合に使用される。
- * 
- * @NotNull
- * 値がnullでないことを検証するアノテーション
- * // id に@NotNull は付けない→
- * // POSTでエラーになるため @NotNull(message = "id must not be null")
- * // idはControllerのパスパラメータで受け取る
- * // Boolean (ラッパークラス)
- * // nullを取れる→@NotNullをつけられる。JSONからの入力でnullが来た場合に検知可能。
- * //REST APIの入力はJSONのため、クライアントがdoneを送ってこない→null になるケースが存在する。
- */
