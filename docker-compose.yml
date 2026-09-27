@@ -19,7 +19,9 @@ services:
     healthcheck:
       # MySQLが接続を受け付けられる状態かを定期チェック。
       # これが healthy になるまで app は起動を待つ。
-      test: ["CMD", "mysqladmin", "ping", "-h", "localhost", "-p$MYSQL_ROOT_PASSWORD"]
+      # "localhost" だとUnixソケット経由になり、初回初期化中の一時サーバー(TCP無効)にも
+      # 応答してしまうため、127.0.0.1 を指定してTCPで確認する。
+      test: ["CMD", "mysqladmin", "ping", "-h", "127.0.0.1", "-p$MYSQL_ROOT_PASSWORD"]
       interval: 5s
       timeout: 5s
       retries: 10

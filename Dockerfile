@@ -1,7 +1,7 @@
 # =========================================================
-# ステージ1: ビルド（Maven + JDK17 でjarを作る）
+# ステージ1: ビルド（Maven + JDK21 でjarを作る）
 # =========================================================
-FROM maven:3.9-eclipse-temurin-17 AS build
+FROM maven:3.9-eclipse-temurin-21 AS build
 WORKDIR /app
 
 # 先に依存定義(pom.xml)だけコピーして依存をダウンロードしておく。
@@ -16,7 +16,7 @@ RUN mvn -B clean package -DskipTests
 # =========================================================
 # ステージ2: 実行（JREのみの軽量イメージ）
 # =========================================================
-FROM eclipse-temurin:17-jre
+FROM eclipse-temurin:21-jre
 WORKDIR /app
 
 # ビルドステージで作られたjarだけをコピーする
