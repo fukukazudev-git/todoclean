@@ -3,7 +3,13 @@
 Spring Boot と Thymeleaf で作った ToDo 管理 Web アプリです。
 CRUD に加えて検索・絞り込み・ソート・ページネーション・一括操作・楽観ロックを実装しています。
 
-<!-- TODO: スクリーンショットを追加 (例: docs/list.png) -->
+![一覧画面](docs/list.png)
+
+期限切れの ToDo は赤、期限が 3 日以内の ToDo は黄色で表示します。
+
+| 入力バリデーション | 更新競合（楽観ロック） |
+| --- | --- |
+| ![入力エラー画面](docs/validation.png) | ![更新競合画面](docs/conflict.png) |
 
 ## 主な機能
 
